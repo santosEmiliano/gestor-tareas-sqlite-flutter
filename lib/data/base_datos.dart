@@ -27,6 +27,16 @@ class BaseDatos extends _$BaseDatos {
   @override
   int get schemaVersion => 1;
 
+  // SELECT: devuelve todas las tareas, las más nuevas primero.
+  Future<List<Tarea>> listarTareas() {
+    return (select(tareas)..orderBy([(t) => OrderingTerm.desc(t.id)])).get();
+  }
+
+  // INSERT: guarda una tarea nueva y devuelve el id que le tocó.
+  Future<int> insertarTarea(String titulo) {
+    return into(tareas).insert(TareasCompanion.insert(titulo: titulo));
+  }
+
   // drift_flutter elige dónde guardar el archivo según la plataforma.
   static QueryExecutor _abrirConexion() {
     return driftDatabase(name: 'gestor_tareas');
