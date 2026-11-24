@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../data/base_datos.dart';
 import '../models/tarea.dart';
 import '../services/gestor_tareas.dart';
+import 'dialogo_editar_tarea.dart';
 
-// Pantalla base SIN persistencia ni operaciones CRUD implementadas.
-// Conserva las indicaciones TODO para orientar tu trabajo.
+// Pantalla principal: agrega, lista, edita, completa y elimina tareas.
 class TareasPage extends StatefulWidget {
   // Las pruebas pasan su propio gestor de la bd, la app normal no manda ninguno.
   final GestorTareas? gestor;
@@ -68,19 +68,48 @@ class _TareasPageState extends State<TareasPage> {
     }
   }
 
-  void _alternarCompletada(Tarea tarea, bool completada) {
-    _pendiente('Implementar actualización de tarea');
+  // Corre una operación de la base y recarga la lista si salió bien.
+  // Si falla, avisa con un mensaje en vez de petar la aplicación.
+  Future<void> _ejecutar(
+    Future<void> Function() operacion,
+    String errorMensaje,
+  ) async {
+    try {
+      await operacion();
+      await _cargar();
+    } on ArgumentError catch (e) {
+      _mostrarMensaje(e.message.toString());
+    } catch (e) {
+      _mostrarMensaje('$errorMensaje: $e');
+    }
   }
 
-  void _editarTarea(Tarea tarea) {
-    _pendiente('Implementar edición de título');
+  Future<void> _alternarCompletada(Tarea tarea, bool completada) {
+    return _ejecutar(
+      () => _gestor.cambiarEstado(tarea.id, completada),
+      'No se pudo actualizar la tarea',
+    );
   }
 
-  void _eliminarTarea(Tarea tarea) {
-    _pendiente('Implementar eliminación de tarea');
+  Future<void> _editarTarea(Tarea tarea) async {
+    // La ventana devuelve el título nuevo, o null si se canceló.
+    final nuevo = await showDialog<String>(
+      context: context,
+      builder: (_) => DialogoEditarTarea(tituloActual: tarea.titulo),
+    );
+    if (nuevo == null) return;
+    await _ejecutar(
+      () => _gestor.editarTitulo(tarea.id, nuevo),
+      'No se pudo editar la tarea',
+    );
   }
 
-  void _pendiente(String mensaje) => _mostrarMensaje(mensaje);
+  Future<void> _eliminarTarea(Tarea tarea) {
+    return _ejecutar(
+      () => _gestor.eliminar(tarea.id),
+      'No se pudo eliminar la tarea',
+    );
+  }
 
   void _mostrarMensaje(String mensaje) {
     if (!mounted) return;
