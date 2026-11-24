@@ -58,6 +58,13 @@ class BaseDatos extends _$BaseDatos {
 
   // drift_flutter elige dónde guardar el archivo según la plataforma.
   static QueryExecutor _abrirConexion() {
-    return driftDatabase(name: 'gestor_tareas');
+    return driftDatabase(
+      name: 'gestor_tareas',
+      // Solo se usa en el navegador: son los archivos que están en web/.
+      web: DriftWebOptions(
+        sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+        driftWorker: Uri.parse('drift_worker.dart.js'),
+      ),
+    );
   }
 }
