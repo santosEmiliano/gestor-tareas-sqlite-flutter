@@ -9,14 +9,30 @@ class GestorTareas {
 
   Future<List<Tarea>> listar() => base.listarTareas();
 
-  Future<void> crear(String titulo) async {
-    // trim() quita espacios al inicio y al final.
-    final limpio = titulo.trim();
-    // Si solo había espacios, queda vacío y no se guarda.
-    if (limpio.isEmpty) {
+  // Quita espacios sobrantes y rechaza el título si queda vacío.
+  String _validarTitulo(String titulo) {
+    final cadenalimpia = titulo.trim();
+    if (cadenalimpia.isEmpty) {
       throw ArgumentError('El título no puede estar vacío');
     }
-    await base.insertarTarea(limpio);
+    return cadenalimpia;
+  }
+
+  Future<void> crear(String titulo) async {
+    await base.insertarTarea(_validarTitulo(titulo));
+  }
+
+  Future<void> editarTitulo(int id, String titulo) async {
+    // Igual se valida el título como al crear.
+    await base.actualizarTitulo(id, _validarTitulo(titulo));
+  }
+
+  Future<void> cambiarEstado(int id, bool completada) async {
+    await base.actualizarEstado(id, completada);
+  }
+
+  Future<void> eliminar(int id) async {
+    await base.eliminarTarea(id);
   }
 
   // Libera la conexión con la base.
