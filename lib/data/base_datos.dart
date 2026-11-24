@@ -37,6 +37,25 @@ class BaseDatos extends _$BaseDatos {
     return into(tareas).insert(TareasCompanion.insert(titulo: titulo));
   }
 
+  // UPDATE: cambia solo el título de la tarea con el id del parámetro.
+  Future<int> actualizarTitulo(int id, String titulo) {
+    return (update(tareas)..where((t) => t.id.equals(id))).write(
+      TareasCompanion(titulo: Value(titulo)),
+    );
+  }
+
+  // UPDATE: marca la tarea como completada o pendiente.
+  Future<int> actualizarEstado(int id, bool completada) {
+    return (update(tareas)..where((t) => t.id.equals(id))).write(
+      TareasCompanion(completada: Value(completada)),
+    );
+  }
+
+  // DELETE: borra la tarea con ese id.
+  Future<int> eliminarTarea(int id) {
+    return (delete(tareas)..where((t) => t.id.equals(id))).go();
+  }
+
   // drift_flutter elige dónde guardar el archivo según la plataforma.
   static QueryExecutor _abrirConexion() {
     return driftDatabase(name: 'gestor_tareas');
