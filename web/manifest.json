@@ -1,11 +1,11 @@
 {
-    "name": "gestor_tareas_local",
-    "short_name": "gestor_tareas_local",
+    "name": "Gestor de tareas",
+    "short_name": "Gestor de tareas",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Gestor de tareas con persistencia local en SQLite (Drift).",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -8,7 +8,7 @@ void main() {
 }
 
 /// Punto de entrada de la aplicación.
-/// La configuración del almacenamiento se agregará como parte de la tarea.
+/// La base de datos se abre en la pantalla principal (TareasPage).
 class GestorTareasApp extends StatelessWidget {
   // Las pruebas lo usan para no abrir la base real.
   final GestorTareas? gestor;

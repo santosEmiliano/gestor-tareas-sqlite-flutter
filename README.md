@@ -56,8 +56,8 @@ La pantalla no ejecuta consultas dentro de `build()`: carga los datos en `initSt
 Requiere Flutter instalado (`flutter doctor -v`).
 
 ```bash
-git clone <url-del-repositorio>
-cd <carpeta-del-repositorio>
+git clone https://github.com/santosEmiliano/gestor-tareas-sqlite-flutter.git
+cd gestor-tareas-sqlite-flutter
 flutter pub get
 flutter analyze
 flutter test
